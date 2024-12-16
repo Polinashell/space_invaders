@@ -2,13 +2,22 @@ using UnityEngine;
 
 public class PlayerShooting : MonoBehaviour
 {
-    public GameObject bulletPrefab; // The bullet prefab
-    public Transform firePoint;     // Point where the bullet will spawn
-    public float bulletSpeed = 10f; // Speed of the bullet
+    public GameObject bulletPrefab; // Bullet prefab
+    public Transform firePoint;     // Fire point position
+    public float bulletSpeed = 10f; // Bullet speed
+    public AudioClip shootSound;    // Sound effect for shooting
+
+    private AudioSource audioSource;
+
+    void Start()
+    {
+        // Get the AudioSource component
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // Check if Space key is pressed
+        if (Input.GetKeyDown(KeyCode.Space)) // Fire when space is pressed
         {
             Shoot();
         }
@@ -16,11 +25,14 @@ public class PlayerShooting : MonoBehaviour
 
     void Shoot()
     {
-        // Instantiate the bullet at the firePoint position
+        // Instantiate the bullet at firePoint position
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
-        
-        // Add upward velocity to the bullet
+
+        // Set bullet velocity
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         rb.velocity = Vector2.up * bulletSpeed;
+
+        // Play shoot sound
+        audioSource.PlayOneShot(shootSound);
     }
 }
