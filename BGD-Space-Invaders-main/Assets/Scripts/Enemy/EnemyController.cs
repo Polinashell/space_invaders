@@ -7,45 +7,40 @@ public class EnemyController : MonoBehaviour
     public float maxPosX;
 
     public float moveDistance = 1f;
-
     bool isMovingRight = true;
 
-
-    public float timeStep = 1f;
-    public float countdown;
-	
-	// I added a switch to try both methods
-	public bool isUsingCountdown = true;
+    // Variables for managing enemy speed and movement
+    public float timeStep = 1f; // Time step for movement speed
+    public float countdown; // Countdown timer for movement
+    public bool isUsingCountdown = true; // Option to use countdown timer
 
     // Use this for initialization
     void Start()
     {
-		if (isUsingCountdown)
-		{
-			countdown = timeStep;
-		}
-		else
-		{	
-			// Invoke repeating will be called once after timeStep (2nd parameter) amount,
-			// and then repeatedly every timeStep (3rd parameter) amount
-			//InvokeRepeating("Move", timeStep, timeStep);
-			InvokeRepeating("Move", timeStep, timeStep);
-		}
+        if (isUsingCountdown)
+        {
+            countdown = timeStep;
+        }
+        else
+        {   
+            // Repeatedly call Move() at intervals defined by timeStep
+            InvokeRepeating("Move", timeStep, timeStep);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-		if (isUsingCountdown)
-		{
-			countdown -= Time.deltaTime;
+        if (isUsingCountdown)
+        {
+            countdown -= Time.deltaTime;
 
-			if (countdown <= 0)
-			{
-				Move();
-				countdown = timeStep;
-			}
-		}
+            if (countdown <= 0)
+            {
+                Move();
+                countdown = timeStep;
+            }
+        }
     }
 
     void Move()
@@ -78,3 +73,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 }
+
+
+
+
+
+
