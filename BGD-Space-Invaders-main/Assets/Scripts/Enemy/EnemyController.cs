@@ -19,7 +19,7 @@ public class EnemyController : MonoBehaviour
     // Speed increase amount (decreasing timeStep to make enemies faster)
     public float speedIncreaseAmount = 0.5f;
 
-    public float timeStep = 1f;
+    public float timeStep = 1f;  // Initial speed (time between moves)
     public float countdown;
 
     // I added a switch to try both methods
@@ -34,7 +34,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            InvokeRepeating("Move", timeStep, timeStep);
+            InvokeRepeating("Move", timeStep, timeStep);  // Initial move
         }
     }
 
@@ -43,12 +43,12 @@ public class EnemyController : MonoBehaviour
     {
         if (isUsingCountdown)
         {
-            countdown -= Time.deltaTime;
+            countdown -= Time.deltaTime;  // Countdown method, decreasing time
 
             if (countdown <= 0)
             {
-                Move();
-                countdown = timeStep;
+                Move();  // Move the enemy
+                countdown = timeStep;  // Reset countdown with the new timeStep
             }
         }
     }
@@ -58,19 +58,22 @@ public class EnemyController : MonoBehaviour
         // Check if the number of destroyed enemies exceeds the threshold
         if (enemiesDestroyed >= increaseSpeedThreshold)
         {
-            // Decrease the timeStep to make the movement faster (increase speed)
-            timeStep = Mathf.Max(0.5f, timeStep - speedIncreaseAmount);
+            timeStep = Mathf.Max(0.5f, timeStep - speedIncreaseAmount);  // Reduce the timeStep (increase speed)
             enemiesDestroyed = 0;  // Reset the counter after speed is increased
+            Debug.Log("Speed Increased! New TimeStep: " + timeStep); // Debug to verify speed change
+
+            // Cancel the previous InvokeRepeating and restart it with the updated timeStep
+            CancelInvoke("Move");  
+            InvokeRepeating("Move", timeStep, timeStep);  // Start new InvokeRepeating with the updated timeStep
         }
 
+        // Enemy movement code
         if (isMovingRight)
         {
-            // Moving right
             Vector3 currentPos = transform.position;
             Vector3 newPos = currentPos + new Vector3(moveDistance, 0f);
             transform.position = newPos;
 
-            // If aliens group reached the right-most edge, flip their direction
             if (transform.position.x >= maxPosX)
             {
                 isMovingRight = false;
@@ -78,12 +81,10 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            // Moving left
             Vector3 currentPos = transform.position;
             Vector3 newPos = currentPos - new Vector3(moveDistance, 0f);
             transform.position = newPos;
 
-            // If aliens group reached the left-most edge, flip their direction
             if (transform.position.x <= minPosX)
             {
                 isMovingRight = true;
@@ -95,8 +96,23 @@ public class EnemyController : MonoBehaviour
     public static void EnemyDestroyed()
     {
         enemiesDestroyed++;
+        Debug.Log("Destroyed enemies: " + enemiesDestroyed); // Debug to track destroyed enemies
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
