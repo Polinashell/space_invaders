@@ -11,10 +11,7 @@ public class Laser : MonoBehaviour
         if (collision.CompareTag("Alien"))
         {
             // Add points to the score
-            if (ScoreManager.instance != null)
-            {
-                ScoreManager.instance.AddScore(10);
-            }
+            ScoreManager.instance.AddScore(10);
 
             // Instantiate explosion effect
             if (explosionPrefab != null)
@@ -28,12 +25,13 @@ public class Laser : MonoBehaviour
                 AudioSource.PlayClipAtPoint(explosionSound, transform.position);
             }
 
-            // Destroy the enemy (Alien) and the laser (bullet)
+            // Destroy the enemy (Alien) and the bullet (Laser)
             Destroy(collision.gameObject); // Destroy the Alien
             Destroy(gameObject);           // Destroy the Laser
         }
     }
 }
+
 
 
 

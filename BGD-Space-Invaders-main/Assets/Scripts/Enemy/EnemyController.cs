@@ -7,12 +7,23 @@ public class EnemyController : MonoBehaviour
     public float maxPosX;
 
     public float moveDistance = 1f;
+
     bool isMovingRight = true;
 
-    // Variables for managing enemy speed and movement
-    public float timeStep = 1f; // Time step for movement speed
-    public float countdown; // Countdown timer for movement
-    public bool isUsingCountdown = true; // Option to use countdown timer
+    // Variable for tracking the number of destroyed enemies
+    private static int enemiesDestroyed = 0;
+
+    // Threshold for number of destroyed enemies after which speed will increase
+    public int increaseSpeedThreshold = 5;
+
+    // Speed increase amount (decreasing timeStep to make enemies faster)
+    public float speedIncreaseAmount = 0.5f;
+
+    public float timeStep = 1f;
+    public float countdown;
+
+    // I added a switch to try both methods
+    public bool isUsingCountdown = true;
 
     // Use this for initialization
     void Start()
@@ -22,8 +33,7 @@ public class EnemyController : MonoBehaviour
             countdown = timeStep;
         }
         else
-        {   
-            // Repeatedly call Move() at intervals defined by timeStep
+        {
             InvokeRepeating("Move", timeStep, timeStep);
         }
     }
@@ -45,6 +55,14 @@ public class EnemyController : MonoBehaviour
 
     void Move()
     {
+        // Check if the number of destroyed enemies exceeds the threshold
+        if (enemiesDestroyed >= increaseSpeedThreshold)
+        {
+            // Decrease the timeStep to make the movement faster (increase speed)
+            timeStep = Mathf.Max(0.5f, timeStep - speedIncreaseAmount);
+            enemiesDestroyed = 0;  // Reset the counter after speed is increased
+        }
+
         if (isMovingRight)
         {
             // Moving right
@@ -72,7 +90,16 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+
+    // Static method to increment the number of destroyed enemies
+    public static void EnemyDestroyed()
+    {
+        enemiesDestroyed++;
+    }
 }
+
+
+
 
 
 

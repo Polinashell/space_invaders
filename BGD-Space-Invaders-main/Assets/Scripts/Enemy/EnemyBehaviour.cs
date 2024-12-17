@@ -4,37 +4,34 @@ using UnityEngine;
 
 public class EnemyBehaviour : MonoBehaviour
 {
-    public AudioClip destructionSFX;
+    public AudioClip destructionSFX;  // Sound to play when the enemy is destroyed
 
-    // physical simulation hits. For Unity to call this function, at least one of the colliding objects
-    // needs to have their RigidBody component set to "Dynamic" for Body Type
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        print("I Collided!");
-    }
-
-    // Unity calls this function if the Collider on the game object has "Is Trigger" checked.
-    // Then it doesn't physically react to hits but still detects them
+    // Unity calls this function when the Collider on the game object has "Is Trigger" checked.
+    // It detects when the enemy collides with a projectile (laser)
     private void OnTriggerEnter2D(Collider2D collision)
     {
         print("I was triggered!");
 
-        // Check the other colliding object's tag to know if it's
-        // indeed a player projectile
-        if (collision.tag == "Laser")
+        // Check if the collider is a "Laser" (the player's projectile)
+        if (collision.CompareTag("Laser"))
         {
-            // Destroy the alien game object
+            // Destroy the alien game object (enemy)
             Destroy(gameObject);
-            
-            // Destroy the projectile game object
+
+            // Destroy the projectile (laser) game object
             Destroy(collision.gameObject);
-            
-            // Play an audio clip in the scene and not attached to the alien
-            // so the sound keeps playing even after it's destroyed
+
+            // Play the destruction sound when the enemy is destroyed
             AudioSource.PlayClipAtPoint(destructionSFX, transform.position);
+
+            // Increment the number of destroyed enemies by calling the EnemyController's method
+            EnemyController.EnemyDestroyed();  // This updates the enemiesDestroyed count in EnemyController
         }
     }
 }
+
+
+
 
 
 
