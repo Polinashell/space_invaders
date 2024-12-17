@@ -10,83 +10,50 @@ public class PlayerController : MonoBehaviour
     public SpriteRenderer playerSprite;
     private float playerSpriteHalfWidth;
 
-
     public float rightScreenEdge;
     public float leftScreenEdge;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         SetupScreenBounds();
     }
 
-    // Update is called once per frame
     void Update()
     {
         float inputHl = Input.GetAxis("Horizontal");
 
-        // if pressed right (inputHl will be 1) and the player character hasn't crossed the right limit of the screen,
-        // allow them to keep moving right
+        // If moving right and the player is within screen bounds
         if (inputHl > 0 && transform.position.x < rightScreenEdge - playerSpriteHalfWidth)
         {
-            // Move to the right
-
             Vector3 currentPosition = transform.position;
-
-            // we ADD 1 point along the X direction
             Vector3 newPosition = currentPosition + new Vector3(1f, 0f);
-
-            // Apply the movement to the player character's position, adjusted by the speed and deltaTime
             transform.position = Vector3.MoveTowards(currentPosition, newPosition, moveSpeed * Time.deltaTime);
         }
+        // If moving left and the player is within screen bounds
         else if (inputHl < 0 && transform.position.x > leftScreenEdge + playerSpriteHalfWidth)
         {
-            // Move to the left
-
             Vector3 currentPosition = transform.position;
-
-            // we SUBTRACT 1 point along the X direction
             Vector3 newPosition = currentPosition - new Vector3(1f, 0f);
-
             transform.position = Vector3.MoveTowards(currentPosition, newPosition, moveSpeed * Time.deltaTime);
         }
     }
 
     void SetupScreenBounds()
     {
-        // Assign the game's current main camera to local variable mainCamera, to use it multiple times
         Camera mainCamera = Camera.main;
 
-        // Find the point in game world where the right screen edge touches
+        // Find the world position of the right screen edge
         Vector2 screenTopRightCorner = new Vector2(Screen.width, Screen.height);
         Vector2 topRightCornerInWorldSpace = mainCamera.ScreenToWorldPoint(screenTopRightCorner);
         rightScreenEdge = topRightCornerInWorldSpace.x;
 
-        // Find the point in game world where the left screen edge touches
+        // Find the world position of the left screen edge
         Vector2 screenBottomLeftCorner = new Vector2(0f, 0f);
         Vector2 bottomLeftCornerInWorldSpace = mainCamera.ScreenToWorldPoint(screenBottomLeftCorner);
         leftScreenEdge = bottomLeftCornerInWorldSpace.x;
 
-        // Calculate the player sprite's half-width
+        // Calculate the half-width of the player sprite
         playerSpriteHalfWidth = playerSprite.bounds.size.x / 2f;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
